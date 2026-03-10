@@ -30,11 +30,11 @@ class _RoomTipCardState
       case "temple_buddhist":
         return Icons.temple_buddhist;
       case "balcony":
-        return Icons.balcony;
+        return Icons.deck;
       case "tip":
         return Icons.lightbulb;
       default:
-        return Icons.home;
+        return Icons.weekend;
     }
   }
 

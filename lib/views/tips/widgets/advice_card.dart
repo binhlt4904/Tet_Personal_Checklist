@@ -5,6 +5,7 @@ class AdviceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -17,17 +18,22 @@ class AdviceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.card_giftcard,
-                  color: Colors.red),
-              SizedBox(width: 10),
-              Text(
-                "Lời khuyên trước khi bắt đầu",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.brown,
+              const Icon(
+                Icons.card_giftcard,
+                color: Colors.red,
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  "Lời khuyên trước khi bắt đầu",
+                  style: TextStyle(
+                    fontSize: screenWidth * 0.06,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown,
+
+                  ),
                 ),
               ),
             ],

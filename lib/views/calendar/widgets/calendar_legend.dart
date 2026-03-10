@@ -10,17 +10,22 @@ class CalendarLegend extends StatelessWidget {
         children: [
           CircleAvatar(radius: 5, backgroundColor: color),
           const SizedBox(width: 6),
-          Text(text),
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
         ],
       );
     }
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        item(Colors.orange, "Chưa hoàn thành"),
-        item(Colors.green, "Đã hoàn thành"),
-        item(Colors.red, "Quá hạn"),
+        Expanded(child: item(Colors.orange, "Chưa hoàn thành")),
+        Expanded(child: item(Colors.green, "Đã hoàn thành")),
+        Expanded(child: item(Colors.red, "Quá hạn")),
       ],
     );
   }

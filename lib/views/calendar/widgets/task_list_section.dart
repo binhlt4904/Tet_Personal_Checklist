@@ -17,6 +17,8 @@ class TaskListSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     final tasksOfDay = vm.tasks.where((task) {
       return task.deadline?.year == selectedDate.year &&
           task.deadline?.month == selectedDate.month &&
@@ -43,13 +45,20 @@ class TaskListSection extends StatelessWidget {
               const Icon(Icons.calendar_today,
                   color: Colors.indigo),
               const SizedBox(width: 12),
-              Text(
-                DateFormat("EEEE, d 'tháng' M, yyyy", "vi")
-                    .format(selectedDate),
-                style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold),
-              ),
+              Flexible(
+                child: FittedBox(
+                  alignment: Alignment.centerLeft,
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    DateFormat("EEEE, d 'tháng' M, yyyy", "vi")
+                        .format(selectedDate),
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
 

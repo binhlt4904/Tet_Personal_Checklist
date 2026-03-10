@@ -22,13 +22,13 @@ class HomeFilters extends StatelessWidget {
       case 'Phòng ngủ':
         return Icons.bed;
       case 'Nhà bếp':
-        return Icons.kitchen;
+        return Icons.restaurant;
       case 'Nhà vệ sinh':
-        return Icons.bathroom;
+        return Icons.wc;
       case 'Ban công':
         return Icons.deck;
       case 'Phòng thờ':
-        return Icons.self_improvement;
+        return Icons.temple_buddhist;
       default:
         return Icons.home;
     }
@@ -39,7 +39,7 @@ class HomeFilters extends StatelessWidget {
     final vm = context.watch<HomeViewModel>();
 
     return Container(
-      height: 70,
+      height: 90,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -54,56 +54,67 @@ class HomeFilters extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                   decoration: BoxDecoration(
                     gradient: selected
                         ? const LinearGradient(
                       colors: [
-                        Color(0xFFD32F2F),
-                        Color(0xFFFF7043)
+                        Color(0xFFE53935),
+                        Color(0xFFFF7043),
                       ],
                     )
                         : null,
                     color: selected ? null : Colors.white,
-                    borderRadius: BorderRadius.circular(22),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 6,
-                        offset: Offset(0, 3),
-                      )
-                    ],
+                    borderRadius: BorderRadius.circular(26),
+
+                    border: Border.all(
+                      color: selected ? Colors.amber : Colors.red.shade100,
+                      width: 2,
+                    ),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        _getIcon(item),
-                        size: 18,
-                        color:
-                        selected ? Colors.white : const Color(0xFFD32F2F),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: selected
+                              ? Colors.white.withOpacity(0.2)
+                              : Colors.red.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(
+                          _getIcon(item),
+                          size: 20,
+                          color: selected ? Colors.yellow.shade200 : Colors.red,
+                        ),
                       ),
-                      const SizedBox(width: 6),
+
+                      const SizedBox(width: 10),
+
                       Text(
                         item,
                         style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: selected ? Colors.white : Colors.black87,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 15,
+                          color: selected ? Colors.yellow.shade200 : Colors.red.shade800,
                         ),
                       ),
+
+                      const SizedBox(width: 12),
                     ],
+
                   ),
                 ),
 
-                /// 🌼 Hoa mai góc chip
-                /// 🌸 Hoa đào góc chip
+                /// 🌸 Hoa ở góc trong chip
                 Positioned(
-                  top: -6,
-                  right: -6,
+                  top: 4,
+                  right: 6,
                   child: Icon(
                     Icons.filter_vintage,
-                    size: 18,
-                    color: Colors.pink.shade300,
+                    size: 14,
+                    color: selected ? Colors.white70 : Colors.pink.shade300,
                   ),
                 ),
               ],
