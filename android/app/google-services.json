@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "195525924126",
+    "project_id": "tet-checklist",
+    "storage_bucket": "tet-checklist.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:195525924126:android:4dbca7bd22c875bb48650f",
+        "android_client_info": {
+          "package_name": "com.example.test_personal_checklist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyaQPu9g15uq3NMGulqnBgMDvWwCe7CaM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
