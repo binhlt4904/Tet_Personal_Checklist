@@ -13,6 +13,9 @@ class HomeViewModel extends ChangeNotifier {
     loadTasks();
   }
 
+  List<Task> get allTasks => _tasks;
+
+
   List<Task> get tasks => filterRoom == 'Tất cả'
       ? _tasks
       : _tasks.where((t) => t.room == filterRoom).toList();

@@ -18,8 +18,10 @@ class TaskListSection extends StatelessWidget {
     final vm = context.watch<HomeViewModel>();
 
     final screenWidth = MediaQuery.of(context).size.width;
-
-    final tasksOfDay = vm.tasks.where((task) {
+    // for (var task in vm.allTasks) {
+    //   print("Task: ${task.title} - Room: ${task.room} - Deadline: ${task.deadline} - IsDone: ${task.isDone}");
+    // }
+    final tasksOfDay = vm.allTasks.where((task) {
       return task.deadline?.year == selectedDate.year &&
           task.deadline?.month == selectedDate.month &&
           task.deadline?.day == selectedDate.day;

@@ -33,27 +33,33 @@ class DaysGrid extends StatelessWidget {
       children.add(const SizedBox());
     }
 
+
     for (int day = 1; day <= daysInMonth; day++) {
       final date =
       DateTime(currentMonth.year, currentMonth.month, day);
 
-      final tasksOfDay = vm.tasks.where((task) {
+      final tasksOfDay = vm.allTasks.where((task) {
         return task.deadline?.year == date.year &&
             task.deadline?.month == date.month &&
             task.deadline?.day == date.day;
       }).toList();
 
-      final hasOverdue = tasksOfDay.any((t) =>
+      final now = DateTime.now();
+
+      final overdueCount = tasksOfDay.where((t) =>
+      t.deadline != null &&
+          t.deadline!.isBefore(now) &&
+          !t.isDone).length;
+
+      final incompleteCount = tasksOfDay.where((t) =>
       !t.isDone &&
-          t.deadline != null &&
-          t.deadline!.isBefore(DateTime.now()));
+          (t.deadline == null || !t.deadline!.isBefore(now))).length;
 
-      final hasIncomplete =
-      tasksOfDay.any((t) => !t.isDone);
-
-      final hasCompleted =
-      tasksOfDay.any((t) => t.isDone);
-
+      final completedCount =
+          tasksOfDay.where((t) => t.isDone).length;
+      for (var task in tasksOfDay) {
+        print("Task: ${task.title} - Room: ${task.room} - Deadline: ${task.deadline} - IsDone: ${task.isDone}");
+      }
       final isSelected =
           selectedDate.year == date.year &&
               selectedDate.month == date.month &&
@@ -86,18 +92,20 @@ class DaysGrid extends StatelessWidget {
                   mainAxisAlignment:
                   MainAxisAlignment.center,
                   children: [
-                    if (hasOverdue)
-                      _dot(isSelected
-                          ? Colors.white
-                          : Colors.red),
-                    if (hasIncomplete)
-                      _dot(isSelected
-                          ? Colors.white
-                          : Colors.orange),
-                    if (hasCompleted)
-                      _dot(isSelected
-                          ? Colors.white
-                          : Colors.green),
+                    ...List.generate(
+                      overdueCount,
+                          (_) => _dot(isSelected ? Colors.white : Colors.red),
+                    ),
+
+                    ...List.generate(
+                      incompleteCount,
+                          (_) => _dot(isSelected ? Colors.white : Colors.orange),
+                    ),
+
+                    ...List.generate(
+                      completedCount,
+                          (_) => _dot(isSelected ? Colors.white : Colors.green),
+                    ),
                   ],
                 )
               ],
