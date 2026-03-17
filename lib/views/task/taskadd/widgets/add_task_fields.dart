@@ -6,12 +6,18 @@ class AddTaskFields extends StatelessWidget {
   final String room;
   final Function(String) onRoomChanged;
 
+  // 👇 thêm validator từ ngoài truyền vào
+  final String? Function(String?)? titleValidator;
+  final String? Function(String?)? descriptionValidator;
+
   const AddTaskFields({
     super.key,
     required this.titleController,
     required this.descriptionController,
     required this.room,
     required this.onRoomChanged,
+    this.titleValidator,
+    this.descriptionValidator,
   });
 
   @override
@@ -19,17 +25,19 @@ class AddTaskFields extends StatelessWidget {
     return Column(
       children: [
         /// TITLE
-        TextField(
+        TextFormField(
           controller: titleController,
           decoration: _inputDecoration("VD: Lau dọn tủ lạnh..."),
+          validator: titleValidator,
         ),
         const SizedBox(height: 14),
 
-        /// DESCRIPTION (NEW FIELD)
-        TextField(
+        /// DESCRIPTION
+        TextFormField(
           controller: descriptionController,
           maxLines: 3,
           decoration: _inputDecoration("Mô tả chi tiết (không bắt buộc)"),
+          validator: descriptionValidator,
         ),
         const SizedBox(height: 14),
 
@@ -85,6 +93,13 @@ class AddTaskFields extends StatelessWidget {
         borderSide: const BorderSide(
           color: Colors.red,
           width: 2,
+        ),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(
+          color: Colors.red,
+          width: 1,
         ),
       ),
     );

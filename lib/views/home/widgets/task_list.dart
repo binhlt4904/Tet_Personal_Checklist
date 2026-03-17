@@ -17,7 +17,32 @@ class TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.read<HomeViewModel>();
-
+    void _showLoading(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => Center(
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text(
+                  "Đang xóa...",
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
     return ListView.builder(
       padding: const EdgeInsets.all(16),
       itemCount: tasks.length,
@@ -43,7 +68,25 @@ class TaskList extends StatelessWidget {
               ),
             );
           },
-          onDelete: () => vm.delete(task.id!),
+          onDelete: () async {
+            _showLoading(context);
+
+            try {
+              await vm.delete(task.id!); // 👈 gọi delete thật
+
+              Navigator.pop(context); // đóng loading
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Đã xóa thành công")),
+              );
+            } catch (e) {
+              Navigator.pop(context); // đóng loading
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Xóa thất bại")),
+              );
+            }
+          },
         );
       },
     );

@@ -19,6 +19,135 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void _confirmDelete(BuildContext context) {
+      showGeneralDialog(
+        context: context,
+        barrierDismissible: true,
+        barrierLabel: "Delete",
+        barrierColor: Colors.black54,
+        transitionDuration: const Duration(milliseconds: 300),
+        pageBuilder: (context, animation, secondaryAnimation) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 320),
+                child: Material(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        /// Icon
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.red.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                            size: 32,
+                          ),
+                        ),
+
+                        const SizedBox(height: 14),
+
+                        /// Title
+                        const Text(
+                          "Xóa công việc?",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
+
+                        /// Content
+                        const Text(
+                          "Hành động này không thể hoàn tác.\nBạn có chắc chắn muốn xóa?",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            color: Colors.black54,
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        /// Buttons
+                        Row(
+                          children: [
+                            /// Cancel
+                            Expanded(
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text(
+                                  "Hủy",
+                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                                ),
+                              ),
+                            ),
+
+                            const SizedBox(width: 12),
+
+                            /// Delete
+                            Expanded(
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.red,
+                                  padding: const EdgeInsets.symmetric(vertical: 12),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  onDelete();
+                                },
+                                child: const Text(
+                                  "Xóa",
+                                  style: TextStyle(fontSize: 14, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+
+        /// Animation mượt hơn
+        transitionBuilder: (context, animation, secondaryAnimation, child) {
+          final curved = Curves.easeOutBack.transform(animation.value);
+
+          return Transform.scale(
+            scale: curved,
+            child: Opacity(
+              opacity: animation.value,
+              child: child,
+            ),
+          );
+        },
+      );
+    }
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(18),
@@ -93,7 +222,7 @@ class TaskCard extends StatelessWidget {
                         ),
                         _actionIcon(
                           icon: Icons.delete_outline,
-                          onTap: onDelete,
+                          onTap: () => _confirmDelete(context),
                         ),
                       ],
                     ),

@@ -14,7 +14,28 @@ class Task {
     this.deadline,
     this.isDone = false,
   });
+  factory Task.fromJson(Map<String, dynamic> json) {
+    return Task(
+      id: json['id'],
+      title: json['title'],
+      description: json['description'] ?? '',
+      room: json['room'],
+      deadline: json['deadline'] != null
+          ? DateTime.parse(json['deadline'])
+          : null,
+      isDone: json['is_done'] ?? false,
+    );
+  }
 
+  Map<String, dynamic> toJson() {
+    return {
+      "title": title,
+      "description": description,
+      "room": room,
+      "deadline": deadline?.toIso8601String(),
+      "is_done": isDone,
+    };
+  }
   Task copyWith({
     String? id,
     String? title,

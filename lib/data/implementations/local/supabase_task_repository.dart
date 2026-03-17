@@ -28,7 +28,7 @@ class SupabaseTaskRepository implements TaskRepository {
 
   @override
   Future<void> insert(Task task) async {
-    await supabase.from('tasks').insert({
+     await supabase.from('tasks').insert({
       'title': task.title,
       'room': task.room,
       'description': task.description,

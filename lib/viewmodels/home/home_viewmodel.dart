@@ -33,21 +33,42 @@ class HomeViewModel extends ChangeNotifier {
   // ========================
   // LOAD
   // ========================
-
+  bool isLoading = true;
   Future<void> loadTasks() async {
+    isLoading = true;
+    notifyListeners();
+
     _tasks = await repository.getTasks();
+
+    isLoading = false;
     notifyListeners();
   }
 
   // ========================
   // ADD
   // ========================
-
+  bool isAdding = false;
+  bool addSuccess = false;
   Future<void> add(Task task) async {
-    await repository.insert(task);
+    isAdding = true;
+    addSuccess = false;
+    notifyListeners();
 
-    // reload lại từ server (đảm bảo có id mới)
-    await loadTasks();
+    try {
+      await repository.insert(task);
+      await loadTasks();
+
+      addSuccess = true; // 👈 báo thành công
+    } catch (e) {
+      addSuccess = false;
+    }
+
+    isAdding = false;
+    notifyListeners();
+  }
+
+  void clearAddStatus() {
+    addSuccess = false;
   }
 
   // ========================

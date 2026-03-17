@@ -11,14 +11,63 @@ class HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (vm.addSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text("Thêm công việc thành công"),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        );
 
-    return Column(
+        vm.clearAddStatus(); // reset
+      }
+    });
+    return Stack(
       children: [
-         HomeHeader(),
-        const HomeFilters(),
-        Expanded(
-          child: TaskList(tasks: vm.tasks),
+        Column(
+          children: [
+            HomeHeader(),
+            const HomeFilters(),
+
+            Expanded(
+              child: AnimatedSwitcher(
+                transitionBuilder: (child, animation) {
+                  return SlideTransition(
+                    position: Tween(
+                      begin: const Offset(0, 0.1),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: FadeTransition(
+                      opacity: animation,
+                      child: child,
+                    ),
+                  );
+                },
+                duration: const Duration(milliseconds: 300),
+                child: vm.isLoading
+                    ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                    : TaskList(key: ValueKey(vm.tasks.length),tasks: vm.tasks),
+
+              ),
+            ),
+          ],
         ),
+
+        /// 👇 loading khi add
+        if (vm.isAdding)
+          Container(
+            color: Colors.black.withOpacity(0.2),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
       ],
     );
   }
