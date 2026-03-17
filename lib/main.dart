@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:test_personal_checklist/views/main/main_screen.dart';
+import 'core/network/supabase_config.dart';
 import 'di.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'views/home/home_screen.dart';
@@ -9,7 +12,13 @@ import 'views/home/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
+
+  // Initialize Supabase
+  await Supabase.initialize(
+    url: SupabaseConfig.url,
+    anonKey: SupabaseConfig.anonKey,
+  );
   await initializeDateFormatting('vi');
   runApp(const MyApp());
 }

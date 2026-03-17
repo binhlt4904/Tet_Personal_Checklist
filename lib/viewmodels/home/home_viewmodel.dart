@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import '../../data/implementations/local/sqlite_task_repository.dart';
 import '../../data/interfaces/task_repository.dart';
 import '../../domain/entities/task.dart';
 
 class HomeViewModel extends ChangeNotifier {
   final TaskRepository repository;
 
-  List<Task> _tasks = [];
-  String filterRoom = 'Tất cả';
-
   HomeViewModel(this.repository) {
     loadTasks();
   }
 
-  List<Task> get allTasks => _tasks;
+  List<Task> _tasks = [];
+  String filterRoom = 'Tất cả';
 
+  // ========================
+  // GETTERS
+  // ========================
+
+  List<Task> get allTasks => _tasks;
 
   List<Task> get tasks => filterRoom == 'Tất cả'
       ? _tasks
@@ -28,65 +30,83 @@ class HomeViewModel extends ChangeNotifier {
   double get progress =>
       totalCount == 0 ? 0 : completedCount / totalCount;
 
+  // ========================
+  // LOAD
+  // ========================
+
   Future<void> loadTasks() async {
     _tasks = await repository.getTasks();
     notifyListeners();
   }
 
-  Future<void> add(Task task) async {
-    if (repository is SqliteTaskRepository) {
-      await (repository as SqliteTaskRepository).insert(task);
-      _tasks = await repository.getTasks();
-    }
+  // ========================
+  // ADD
+  // ========================
 
-    notifyListeners();
+  Future<void> add(Task task) async {
+    await repository.insert(task);
+
+    // reload lại từ server (đảm bảo có id mới)
+    await loadTasks();
   }
+
+  // ========================
+  // TOGGLE DONE
+  // ========================
 
   Future<void> toggle(Task task) async {
-    task.isDone = !task.isDone;
+    final updated = task.copyWith(isDone: !task.isDone);
 
-    if (repository is SqliteTaskRepository) {
-      await (repository as SqliteTaskRepository).update(task);
+    await repository.update(updated);
+
+    // update local luôn cho mượt UI
+    final index = _tasks.indexWhere((t) => t.id == task.id);
+    if (index != -1) {
+      _tasks[index] = updated;
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
-  Future<void> delete(int id) async {
+  // ========================
+  // DELETE
+  // ========================
+
+  Future<void> delete(String id) async {
     await repository.delete(id);
 
     _tasks.removeWhere((t) => t.id == id);
-
     notifyListeners();
   }
 
+  // ========================
+  // UPDATE
+  // ========================
+
   Future<void> update(Task updatedTask) async {
-    // 1️⃣ Update xuống database
     await repository.update(updatedTask);
 
-    // 2️⃣ Update trong memory list
     final index = _tasks.indexWhere((t) => t.id == updatedTask.id);
 
     if (index != -1) {
       _tasks[index] = updatedTask;
+      notifyListeners();
     }
-
-    // 3️⃣ Notify UI rebuild
-    notifyListeners();
   }
 
-  Future<void> toggleStatus(Task task) async {
-    final updated = task.copyWith(isDone: !task.isDone);
-    await update(updated);
-  }
+  // ========================
+  // FILTER
+  // ========================
 
   void setFilterRoom(String room) {
     filterRoom = room;
     notifyListeners();
   }
 
+  // ========================
+  // REFRESH
+  // ========================
+
   Future<void> refresh() async {
     await loadTasks();
-    notifyListeners();
   }
 }

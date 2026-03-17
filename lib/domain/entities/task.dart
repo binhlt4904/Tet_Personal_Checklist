@@ -1,5 +1,5 @@
 class Task {
-  final int? id;
+  final String? id; // đổi int -> String
   final String title;
   final String room;
   final String? description;
@@ -16,7 +16,7 @@ class Task {
   });
 
   Task copyWith({
-    int? id,
+    String? id,
     String? title,
     String? room,
     String? description,

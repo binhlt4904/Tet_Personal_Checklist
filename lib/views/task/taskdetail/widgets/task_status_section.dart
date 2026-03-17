@@ -61,7 +61,7 @@ class TaskStatusSection extends StatelessWidget {
             child: FittedBox(
               child: ElevatedButton(
                 onPressed: () async {
-                  await vm.toggleStatus(task);
+                  await vm.toggle(task);
                   Navigator.pop(context);
                 },
                 style: ElevatedButton.styleFrom(
