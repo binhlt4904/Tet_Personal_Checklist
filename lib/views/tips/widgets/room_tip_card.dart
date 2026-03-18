@@ -46,7 +46,7 @@ class _RoomTipCardState
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.white, // đỏ nhạt
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
@@ -63,7 +63,7 @@ class _RoomTipCardState
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade100,
+                  color: const Color(0xFFFFCDD2),
                   borderRadius:
                   BorderRadius.circular(16),
                 ),
@@ -152,8 +152,7 @@ class _RoomTipCardState
                   children: [
                     CircleAvatar(
                       radius: 14,
-                      backgroundColor:
-                      Colors.red.shade100,
+                      backgroundColor: const Color(0xFFFFCDD2),
                       child: Text(
                         "${entry.key + 1}",
                         style:

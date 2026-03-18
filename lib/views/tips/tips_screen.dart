@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/widgets/header.dart';
 import '../../data/room/room_tip_data.dart';
 import 'widgets/tips_header.dart';
 import 'widgets/advice_card.dart';
@@ -14,7 +15,11 @@ class TipsScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const TipsHeader(),
+            const Header(
+              title: 'Hướng dẫn & Mẹo hay',
+              description: 'Dọn nhà nhanh gọn, đón Tết sum vầy',
+            ),
+
             const SizedBox(height: 20),
 
             Expanded(
