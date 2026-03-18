@@ -130,4 +130,16 @@ class HomeViewModel extends ChangeNotifier {
   Future<void> refresh() async {
     await loadTasks();
   }
+
+  void clearTasks() {
+    _tasks = [];
+    notifyListeners();
+  }
+
+// Xóa cache và load lại từ Supabase (khi login user mới)
+  Future<void> clearAndReload() async {
+    _tasks = [];
+    notifyListeners();
+    await loadTasks(); // hàm load tasks hiện tại của bạn
+  }
 }

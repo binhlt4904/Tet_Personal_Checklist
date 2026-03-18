@@ -7,23 +7,19 @@ class SupabaseTaskRepository implements TaskRepository {
 
   @override
   Future<List<Task>> getTasks() async {
+    // Lấy user hiện tại đang đăng nhập
+    final userId = supabase.auth.currentUser?.id;
+    print("user id: $userId");
+
+    if (userId == null) return []; // chưa đăng nhập thì trả về rỗng
+
     final response = await supabase
         .from('tasks')
         .select()
+        .eq('user_id', userId) // ← chỉ lấy task của user này
         .order('created_at', ascending: false);
 
-    return (response as List).map((e) {
-      return Task(
-        id: e['id'],
-        title: e['title'],
-        room: e['room'],
-        description: e['description'],
-        deadline: e['deadline'] != null
-            ? DateTime.parse(e['deadline'])
-            : null,
-        isDone: e['is_done'] ?? false,
-      );
-    }).toList();
+    return (response as List).map((e) => Task.fromJson(e)).toList();
   }
 
   @override

@@ -1,5 +1,6 @@
 class Task {
-  final String? id; // đổi int -> String
+  final String? id;
+  final String userId; // ← thêm
   final String title;
   final String room;
   final String? description;
@@ -8,15 +9,18 @@ class Task {
 
   Task({
     this.id,
+    required this.userId, // ← thêm
     required this.title,
     required this.room,
     this.description,
     this.deadline,
     this.isDone = false,
   });
+
   factory Task.fromJson(Map<String, dynamic> json) {
     return Task(
       id: json['id'],
+      userId: json['user_id'], // ← thêm
       title: json['title'],
       description: json['description'] ?? '',
       room: json['room'],
@@ -29,6 +33,7 @@ class Task {
 
   Map<String, dynamic> toJson() {
     return {
+      "user_id": userId, // ← thêm
       "title": title,
       "description": description,
       "room": room,
@@ -36,8 +41,10 @@ class Task {
       "is_done": isDone,
     };
   }
+
   Task copyWith({
     String? id,
+    String? userId, // ← thêm
     String? title,
     String? room,
     String? description,
@@ -46,6 +53,7 @@ class Task {
   }) {
     return Task(
       id: id ?? this.id,
+      userId: userId ?? this.userId, // ← thêm
       title: title ?? this.title,
       room: room ?? this.room,
       description: description ?? this.description,

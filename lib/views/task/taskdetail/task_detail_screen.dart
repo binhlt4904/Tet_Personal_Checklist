@@ -17,8 +17,7 @@ class TaskDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewModel>();
-    final updatedTask =
-    vm.tasks.firstWhere((t) => t.id == task.id);
+    final updatedTask =task;
 
     return Scaffold(
       backgroundColor: const Color(0xF6F4EDDD),

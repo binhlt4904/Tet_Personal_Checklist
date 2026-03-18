@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../domain/entities/task.dart';
 import '../../../../viewmodels/home/home_viewmodel.dart';
 import 'add_task_fields.dart';
@@ -35,19 +36,28 @@ class _AddTaskFormState extends State<AddTaskForm> {
     if (!_formKey.currentState!.validate()) return;
 
     // validate deadline
-    if (_deadline != null && _deadline!.isBefore(DateTime.now())) {
+    if (_deadline == null) {
+      setState(() {
+        _deadlineError = "Vui lòng chọn deadline";
+      });
+      return;
+    }
+
+    // ❗ không được chọn quá khứ
+    if (_deadline!.isBefore(DateTime.now())) {
       setState(() {
         _deadlineError = "Deadline không được trong quá khứ";
       });
       return;
     }
-
+    final userId = Supabase.instance.client.auth.currentUser?.id ?? '';
     final task = Task(
       title: _titleCtrl.text.trim(),
       description: _descriptionCtrl.text.trim(),
       room: _room,
       deadline: _deadline,
       isDone: false,
+      userId: userId,
     );
     widget.onAdd(task);
     Navigator.pop(context);
