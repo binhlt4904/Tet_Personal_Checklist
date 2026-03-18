@@ -77,7 +77,14 @@ class TaskList extends StatelessWidget {
               Navigator.pop(context); // đóng loading
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Đã xóa thành công")),
+                  SnackBar(
+                    content: Text("Đã xóa thành công"),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
               );
             } catch (e) {
               Navigator.pop(context); // đóng loading

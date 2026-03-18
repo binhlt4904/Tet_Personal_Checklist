@@ -51,7 +51,9 @@ class HomeBody extends StatelessWidget {
                 duration: const Duration(milliseconds: 300),
                 child: vm.isLoading
                     ? const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFD32F2F),
+                  ),
                 )
                     : TaskList(key: ValueKey(vm.tasks.length),tasks: vm.tasks),
 

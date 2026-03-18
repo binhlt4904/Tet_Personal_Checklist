@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:test_personal_checklist/views/auth/pages/auth_page.dart';
 import 'package:test_personal_checklist/views/calendar/calendar_screen.dart';
+import 'package:test_personal_checklist/views/profile/profile_screen.dart';
 import 'package:test_personal_checklist/views/statistics/statistics_screen.dart';
 import 'package:test_personal_checklist/views/tips/tips_screen.dart';
 import '../home/home_screen.dart';
@@ -20,6 +22,7 @@ class _MainScreenState extends State<MainScreen> {
     CalendarScreen(),
     StatisticsScreen(),
     TipsScreen(),
+    ProfileScreen(),
   ];
 
   @override
@@ -74,6 +77,7 @@ class _MainScreenState extends State<MainScreen> {
               activeIcon: Icon(Icons.home),
               label: "Trang chủ",
             ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_today_outlined),
               activeIcon: Icon(Icons.calendar_today),
@@ -88,6 +92,11 @@ class _MainScreenState extends State<MainScreen> {
               icon: Icon(Icons.lightbulb_outline),
               activeIcon: Icon(Icons.lightbulb),
               label: "Mẹo hay",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person_outline),
+              activeIcon: Icon(Icons.person),
+              label: "Hồ sơ",
             ),
           ],
         ),
