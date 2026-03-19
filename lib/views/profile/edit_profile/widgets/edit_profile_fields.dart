@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class EditProfileFields extends StatelessWidget {
   final TextEditingController nameController;
+  final TextEditingController goalController;
   final String? Function(String?)? nameValidator;
 
   const EditProfileFields({
     super.key,
     required this.nameController,
+    required this.goalController,
     this.nameValidator,
   });
 
@@ -28,6 +30,32 @@ class EditProfileFields extends StatelessWidget {
           controller: nameController,
           decoration: _inputDecoration("Nguyễn Văn A"),
           validator: nameValidator,
+        ),
+
+        const SizedBox(height: 20),
+
+
+        const Text(
+          "Mục tiêu bản thân",
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF222222),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextFormField(
+          controller: goalController,
+          maxLength: 150,
+          maxLines: 3,
+          decoration: _inputDecoration("Ví dụ: Hoàn thành 30 task trong tháng này 🎯")
+              .copyWith(
+            counterStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+            prefixIcon: const Padding(
+              padding: EdgeInsets.only(bottom: 48), // căn icon lên trên
+              child: Icon(Icons.flag_rounded, color: Color(0xFFD32F2F), size: 20),
+            ),
+          ),
         ),
       ],
     );

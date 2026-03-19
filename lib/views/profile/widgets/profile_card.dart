@@ -5,6 +5,7 @@ import 'profile_info_card.dart';
 class ProfileCard extends StatelessWidget {
   final String name;
   final String email;
+  final String goal;
   final String joinDate;
   final int totalTasks;
   final int completedTasks;
@@ -14,6 +15,7 @@ class ProfileCard extends StatelessWidget {
     super.key,
     required this.name,
     required this.email,
+    this.goal = '',
     required this.joinDate,
     required this.totalTasks,
     required this.completedTasks,
@@ -33,7 +35,7 @@ class ProfileCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          ProfileAvatar(name: name, email: email),
+          ProfileAvatar(name: name, email: email, goal: goal),
           const SizedBox(height: 20),
           ProfileInfoCard(
             icon: Icons.calendar_today,

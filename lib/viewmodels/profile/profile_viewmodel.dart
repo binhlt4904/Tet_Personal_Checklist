@@ -15,6 +15,7 @@ class ProfileViewModel extends ChangeNotifier {
   String joinDate = '';
   int totalTasks = 0;
   int completedTasks = 0;
+  String goal = '';
 
   String get achievement {
     if (completedTasks >= 50) return "Siêu nhân";
@@ -30,7 +31,6 @@ class ProfileViewModel extends ChangeNotifier {
 
     try {
       final data = await _repo.getProfile();
-
       final createdAt = DateTime.parse(data['created_at']);
       joinDate = '${createdAt.day.toString().padLeft(2, '0')}/'
           '${createdAt.month.toString().padLeft(2, '0')}/'
@@ -40,6 +40,7 @@ class ProfileViewModel extends ChangeNotifier {
       email = data['email'];
       totalTasks = data['total_tasks'];
       completedTasks = data['completed_tasks'];
+      goal= data['goal'];
     } catch (e) {
       errorMessage = e.toString();
     } finally {
@@ -48,13 +49,15 @@ class ProfileViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> updateProfile({required String name}) async {
+
+  Future<void> updateProfile({required String name,String? goal}) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      await _repo.updateProfile(name: name);
+      await _repo.updateProfile(name: name,goal: goal);
       this.name = name;
+      if (goal != null) this.goal = goal;
     } catch (e) {
       errorMessage = e.toString();
       rethrow;

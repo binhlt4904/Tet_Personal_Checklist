@@ -102,10 +102,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.all(24),
                         child: Column(
                           children: [
-                            // 👤 Profile card
                             ProfileCard(
                               name: vm.name,
                               email: vm.email,
+                              goal: vm.goal,
                               joinDate: vm.joinDate,
                               totalTasks: vm.totalTasks,
                               completedTasks: vm.completedTasks,
@@ -114,7 +114,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             const SizedBox(height: 30),
 
-                            // ✏️ Sửa hồ sơ
                             ProfileActionButton(
                               gradientColors: const [Color(0xFFF4B942), Color(0xFFD89B2D)],
                               icon: Icons.edit,
@@ -142,7 +141,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                             const SizedBox(height: 16),
 
-                            // 🔴 Đăng xuất
                             ProfileActionButton(
                               gradientColors: const [
                                 Color(0xFFD32F2F),

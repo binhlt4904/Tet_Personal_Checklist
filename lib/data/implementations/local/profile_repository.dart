@@ -25,22 +25,27 @@ class ProfileRepository {
 
     return {
       // ✅ Fallback về email nếu chưa có record trong bảng users
-      'name': userResponse?['name'] ?? user.email?.split('@').first ?? 'Người dùng',
+      'name': userResponse?['name'] ?? user.email
+          ?.split('@')
+          .first ?? 'Người dùng',
       'email': user.email ?? '',
       'created_at': userResponse?['created_at'] ?? user.createdAt,
       'total_tasks': tasks.length,
-      'completed_tasks': tasks.where((t) => t['is_done'] == true).length,
+      'completed_tasks': tasks
+          .where((t) => t['is_done'] == true)
+          .length,
+      'goal': userResponse?['goal'] ?? '',
     };
-
   }
 
-  Future<void> updateProfile({required String name}) async {
+  Future<void> updateProfile({required String name,String? goal}) async {
     final user = supabase.auth.currentUser;
     if (user == null) throw Exception("Chưa đăng nhập");
-
     await supabase
         .from('users')
-        .update({'name': name})
+        .update({
+      'name': name,
+      if (goal != null) 'goal': goal,})
         .eq('id', user.id);
   }
 }

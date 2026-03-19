@@ -15,19 +15,21 @@ class EditProfileForm extends StatefulWidget {
 class _EditProfileFormState extends State<EditProfileForm> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameCtrl;
+  late TextEditingController _goalCtrl;
   bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    // ✅ Điền sẵn tên hiện tại
     final vm = context.read<ProfileViewModel>();
     _nameCtrl = TextEditingController(text: vm.name);
+    _goalCtrl = TextEditingController(text: vm.goal);
   }
 
   @override
   void dispose() {
     _nameCtrl.dispose();
+    _goalCtrl.dispose();
     super.dispose();
   }
 
@@ -38,7 +40,10 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
     try {
       final vm = context.read<ProfileViewModel>();
-      await vm.updateProfile(name: _nameCtrl.text.trim());
+      await vm.updateProfile(
+        name: _nameCtrl.text.trim(),
+        goal: _goalCtrl.text.trim(),
+      );
 
       if (!mounted) return;
       Navigator.pop(context);
@@ -64,14 +69,12 @@ class _EditProfileFormState extends State<EditProfileForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // ── Tiêu đề ──
             const EditProfileHeader(),
-
             const SizedBox(height: 20),
 
-            // ── Các trường nhập ──
             EditProfileFields(
               nameController: _nameCtrl,
+              goalController: _goalCtrl,
               nameValidator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return "Vui lòng nhập họ và tên";
@@ -85,7 +88,6 @@ class _EditProfileFormState extends State<EditProfileForm> {
 
             const SizedBox(height: 24),
 
-            // ── Nút lưu ──
             EditProfileButton(
               isLoading: _isLoading,
               onPressed: _submit,
