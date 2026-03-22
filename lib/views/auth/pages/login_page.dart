@@ -6,6 +6,7 @@ import '../toggle/auth_primary_button.dart';
 import '../widgets/auth_input_field.dart';
 import '../widgets/auth_password_field.dart';
 import '../widgets/auth_field_label.dart';
+import '../widgets/auth_field_error.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,30 +20,51 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  String? _emailError;
+  String? _passwordError;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  bool _validate() {
+    bool valid = true;
+    setState(() {
+      final email = _emailController.text.trim();
+      if (email.isEmpty) {
+        _emailError = 'Vui lòng nhập email';
+        valid = false;
+      } else if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+        _emailError = 'Email không hợp lệ';
+        valid = false;
+      } else {
+        _emailError = null;
+      }
+
+      if (_passwordController.text.isEmpty) {
+        _passwordError = 'Vui lòng nhập mật khẩu';
+        valid = false;
+      } else if (_passwordController.text.length < 6) {
+        _passwordError = 'Mật khẩu phải ít nhất 6 ký tự';
+        valid = false;
+      } else {
+        _passwordError = null;
+      }
+    });
+    return valid;
+  }
+
   void _handleLogin() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text.trim();
-
-    // ===== VALIDATE =====
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Vui lòng nhập đầy đủ")),
-      );
-      return;
-    }
-
-    if (password.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Mật khẩu tối thiểu 6 ký tự")),
-      );
-      return;
-    }
+    if (!_validate()) return;
 
     final vm = context.read<AuthViewModel>();
 
     final success = await vm.login(
-      email: email,
-      password: password,
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
 
     if (!mounted) return;
@@ -51,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Đăng nhập thành công 🎉")),
       );
-      // TODO: Navigate tới màn hình chính
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -61,17 +82,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Consumer<AuthViewModel>(
       builder: (context, vm, _) {
-        return Padding(
+        return SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +97,9 @@ class _LoginPageState extends State<LoginPage> {
                 hintText: 'example@email.com',
                 prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
+                hasError: _emailError != null,
               ),
+              AuthFieldError(_emailError),
               const SizedBox(height: 16),
               const AuthFieldLabel('Mật khẩu'),
               const SizedBox(height: 8),
@@ -92,7 +108,9 @@ class _LoginPageState extends State<LoginPage> {
                 obscure: _obscurePassword,
                 onToggle: () =>
                     setState(() => _obscurePassword = !_obscurePassword),
+                hasError: _passwordError != null,
               ),
+              AuthFieldError(_passwordError),
               const SizedBox(height: 28),
               AuthPrimaryButton(
                 label: 'Đăng nhập ngay',

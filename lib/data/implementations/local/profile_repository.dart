@@ -8,7 +8,7 @@ class ProfileRepository {
     print("user $user");
     if (user == null) throw Exception("Chưa đăng nhập");
 
-    // ✅ maybeSingle() trả về null thay vì throw lỗi nếu không có row
+    // maybeSingle() trả về null thay vì throw lỗi nếu không có row
     final userResponse = await supabase
         .from('users')
         .select()
@@ -24,7 +24,6 @@ class ProfileRepository {
     final tasks = tasksResponse as List;
 
     return {
-      // ✅ Fallback về email nếu chưa có record trong bảng users
       'name': userResponse?['name'] ?? user.email
           ?.split('@')
           .first ?? 'Người dùng',

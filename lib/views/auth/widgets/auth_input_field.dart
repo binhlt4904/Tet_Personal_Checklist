@@ -5,6 +5,7 @@ class AuthInputField extends StatelessWidget {
   final String hintText;
   final IconData prefixIcon;
   final TextInputType keyboardType;
+  final bool hasError;
 
   const AuthInputField({
     super.key,
@@ -12,6 +13,7 @@ class AuthInputField extends StatelessWidget {
     required this.hintText,
     required this.prefixIcon,
     required this.keyboardType,
+    this.hasError = false,
   });
 
   @override
@@ -25,7 +27,7 @@ class AuthInputField extends StatelessWidget {
         hintStyle: const TextStyle(color: Color(0xFFBBBBBB)),
         prefixIcon: Icon(prefixIcon, color: const Color(0xFFE57373), size: 20),
         filled: true,
-        fillColor: const Color(0xFFF8F8F8),
+        fillColor: hasError ? const Color(0xFFFFF0F0) : const Color(0xFFF8F8F8),
         contentPadding:
         const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
         border: OutlineInputBorder(
@@ -34,11 +36,17 @@ class AuthInputField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFEEEEEE), width: 1),
+          borderSide: BorderSide(
+            color: hasError ? const Color(0xFFE53935) : const Color(0xFFEEEEEE),
+            width: 1,
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: Color(0xFFD32F2F), width: 1.5),
+          borderSide: BorderSide(
+            color: hasError ? const Color(0xFFE53935) : const Color(0xFFD32F2F),
+            width: 1.5,
+          ),
         ),
       ),
     );
