@@ -320,30 +320,20 @@ class TaskCard extends StatelessWidget {
   }
 
   List<Widget> _buildDeadlineTag() {
-    if (task.deadline == null) return [];
+    if (task.deadline == null || task.isDone) return [];
 
     final now = DateTime.now();
-    final deadline = task.deadline!;
+    final deadline = task.deadline!.toLocal();
+    final diffMinutes = deadline.difference(now).inMinutes;
+    final diffDays = deadline.difference(now).inDays;
 
-    final difference = deadline.difference(now).inDays;
-
-    if (difference < 0) {
-      // 🔴 Quá hạn
+    if (diffMinutes <= 0) {
       return [
-        _tag(
-          "QUÁ HẠN",
-          Colors.red,
-          icon: Icons.warning_amber_rounded,
-        ),
+        _tag("QUÁ HẠN", Colors.red, icon: Icons.warning_amber_rounded),
       ];
-    } else if (difference <= 1) {
-      // 🟠 Sắp đến hạn (≤ 1 ngày)
+    } else if (diffDays <= 1) {
       return [
-        _tag(
-          "SẮP ĐẾN HẠN",
-          Colors.orange,
-          icon: Icons.schedule,
-        ),
+        _tag("SẮP ĐẾN HẠN", Colors.orange, icon: Icons.schedule),
       ];
     }
 

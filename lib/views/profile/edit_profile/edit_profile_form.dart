@@ -48,12 +48,26 @@ class _EditProfileFormState extends State<EditProfileForm> {
       if (!mounted) return;
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Cập nhật hồ sơ thành công 🎉")),
+        SnackBar(
+          content: const Text("Cập nhật hồ sơ thành công"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       );
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Cập nhật thất bại: $e")),
+        SnackBar(
+          content: Text("Cập nhật thất bại: $e"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);

@@ -54,14 +54,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       await context.read<AuthViewModel>().logout();
       if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text("Đăng xuất thành công"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+      );
+      await Future.delayed(const Duration(milliseconds: 800));
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/auth');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Đăng xuất thất bại: $e")),
+        SnackBar(
+          content: Text("Đăng xuất thất bại: $e"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       );
-    } finally {
-      if (mounted) setState(() => _isLoggingOut = false);
     }
   }
 
