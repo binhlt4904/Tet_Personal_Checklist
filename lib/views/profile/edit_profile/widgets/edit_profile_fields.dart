@@ -28,7 +28,9 @@ class EditProfileFields extends StatelessWidget {
         const SizedBox(height: 8),
         TextFormField(
           controller: nameController,
-          decoration: _inputDecoration("Nguyễn Văn A"),
+          decoration: _inputDecoration("Nguyễn Văn A").copyWith(
+            prefixIcon: const Icon(Icons.person_outline, color: Color(0xFFD32F2F), size: 20),
+          ),
           validator: nameValidator,
         ),
 
