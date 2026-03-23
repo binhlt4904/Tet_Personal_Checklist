@@ -113,8 +113,9 @@ class _EditTaskFormState extends State<EditTaskForm> {
                       const SizedBox(width: 8),
                       Text(
                         _selectedDate != null
-                            ? "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}"
-                            : "Chọn ngày",
+                            ? "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year} "
+                            "${_selectedDate!.hour.toString().padLeft(2, '0')}:${_selectedDate!.minute.toString().padLeft(2, '0')}"
+                            : "Chọn ngày & giờ",
                       ),
                     ],
                   ),
@@ -137,6 +138,19 @@ class _EditTaskFormState extends State<EditTaskForm> {
                   );
 
                   await vm.update(updatedTask);
+
+                  if (!mounted) return;
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text("Cập nhật công việc thành công"),
+                      backgroundColor: Colors.green,
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  );
+
                   Navigator.pop(context, true);
                 }
               },
@@ -159,15 +173,29 @@ class _EditTaskFormState extends State<EditTaskForm> {
   }
 
   Future<void> _pickDate() async {
-    final picked = await showDatePicker(
+    final pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate ?? DateTime.now(),
       firstDate: DateTime(2024),
       lastDate: DateTime(2030),
     );
 
-    if (picked != null) {
-      setState(() => _selectedDate = picked);
-    }
+    if (pickedDate == null) return;
+
+    if (!mounted) return;
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(_selectedDate ?? DateTime.now()),
+    );
+
+    setState(() {
+      _selectedDate = DateTime(
+        pickedDate.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime?.hour ?? 0,
+        pickedTime?.minute ?? 0,
+      );
+    });
   }
 }
