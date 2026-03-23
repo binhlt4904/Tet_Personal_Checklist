@@ -87,7 +87,6 @@ class _RegisterPageState extends State<RegisterPage> {
       email: _emailController.text.trim(),
       password: _passwordController.text.trim(),
     );
-    print("register page");
 
     if (!mounted) return;
 
@@ -96,14 +95,28 @@ class _RegisterPageState extends State<RegisterPage> {
       if (!mounted) return;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Đăng ký thành công 🎉")),
+        SnackBar(
+          content: const Text("Đăng ký thành công"),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       );
       widget.onRegisterSuccess?.call();
     } else {
       appEntry?.isRegistering = false;
       setState(() => _isLoading = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(vm.errorMessage ?? "Có lỗi xảy ra")),
+        SnackBar(
+          content: Text("Có lỗi xảy ra"),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
       );
     }
   }
