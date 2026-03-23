@@ -46,20 +46,18 @@ class DaysGrid extends StatelessWidget {
 
       final now = DateTime.now();
 
+
       final overdueCount = tasksOfDay.where((t) =>
       t.deadline != null &&
-          t.deadline!.isBefore(now) &&
+          t.deadline!.toLocal().difference(now).inMinutes <= 120 &&
           !t.isDone).length;
 
       final incompleteCount = tasksOfDay.where((t) =>
       !t.isDone &&
-          (t.deadline == null || !t.deadline!.isBefore(now))).length;
-
+          (t.deadline == null || t.deadline!.toLocal().difference(now).inMinutes > 120)).length;
       final completedCount =
           tasksOfDay.where((t) => t.isDone).length;
-      for (var task in tasksOfDay) {
-        print("Task: ${task.title} - Room: ${task.room} - Deadline: ${task.deadline} - IsDone: ${task.isDone}");
-      }
+
       final isSelected =
           selectedDate.year == date.year &&
               selectedDate.month == date.month &&

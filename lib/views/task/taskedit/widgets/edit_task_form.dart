@@ -23,6 +23,7 @@ class _EditTaskFormState extends State<EditTaskForm> {
 
   DateTime? _selectedDate;
   String _selectedRoom = "Phòng khách";
+  String? _deadlineError;
 
   final List<String> _rooms = [
     'Phòng khách',
@@ -40,7 +41,7 @@ class _EditTaskFormState extends State<EditTaskForm> {
         TextEditingController(text: widget.task.title);
     _descriptionController =
         TextEditingController(text: widget.task.description ?? "");
-    _selectedDate = widget.task.deadline;
+    _selectedDate = widget.task.deadline?.toLocal();
     _selectedRoom = widget.task.room;
   }
 
@@ -99,27 +100,42 @@ class _EditTaskFormState extends State<EditTaskForm> {
             EditCard(
               title: "HẠN HOÀN THÀNH *",
               icon: Icons.calendar_today,
-              child: InkWell(
-                onTap: _pickDate,
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF1F3F6),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.calendar_today, size: 18),
-                      const SizedBox(width: 8),
-                      Text(
-                        _selectedDate != null
-                            ? "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year} "
-                            "${_selectedDate!.hour.toString().padLeft(2, '0')}:${_selectedDate!.minute.toString().padLeft(2, '0')}"
-                            : "Chọn ngày & giờ",
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                    onTap: _pickDate,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF1F3F6),
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                    ],
+                      child: Row(
+                        children: [
+                          const Icon(Icons.calendar_today, size: 18),
+                          const SizedBox(width: 8),
+                          Text(
+                            _selectedDate != null
+                                ? "${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year} "
+                                "${_selectedDate!.hour.toString().padLeft(2, '0')}:${_selectedDate!.minute.toString().padLeft(2, '0')}"
+                                : "Chọn ngày & giờ",
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  if (_deadlineError != null) ...[
+                    const SizedBox(height: 6),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Text(
+                        _deadlineError!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
 
@@ -129,30 +145,42 @@ class _EditTaskFormState extends State<EditTaskForm> {
             EditTaskButtons(
               onCancel: () => Navigator.pop(context),
               onSave: () async {
-                if (_formKey.currentState!.validate()) {
-                  final updatedTask = widget.task.copyWith(
-                    title: _titleController.text,
-                    description: _descriptionController.text,
-                    room: _selectedRoom,
-                    deadline: _selectedDate,
-                  );
+                setState(() => _deadlineError = null);
 
-                  await vm.update(updatedTask);
+                if (!_formKey.currentState!.validate()) return;
 
-                  if (!mounted) return;
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text("Cập nhật công việc thành công"),
-                      backgroundColor: Colors.green,
-                      behavior: SnackBarBehavior.floating,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  );
-
-                  Navigator.pop(context, true);
+                if (_selectedDate == null) {
+                  setState(() => _deadlineError = "Vui lòng chọn deadline");
+                  return;
                 }
+
+                if (_selectedDate!.isBefore(DateTime.now())) {
+                  setState(() => _deadlineError = "Deadline không được trong quá khứ");
+                  return;
+                }
+
+                final updatedTask = widget.task.copyWith(
+                  title: _titleController.text,
+                  description: _descriptionController.text,
+                  room: _selectedRoom,
+                  deadline: _selectedDate,
+                );
+
+                await vm.update(updatedTask);
+
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: const Text("Cập nhật công việc thành công"),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                );
+
+                Navigator.pop(context, true);
               },
             ),
           ],

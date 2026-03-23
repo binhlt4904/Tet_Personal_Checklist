@@ -9,7 +9,7 @@ class SupabaseTaskRepository implements TaskRepository {
   Future<List<Task>> getTasks() async {
     // Lấy user hiện tại đang đăng nhập
     final userId = supabase.auth.currentUser?.id;
-    print("user id: $userId");
+
 
     if (userId == null) return []; // chưa đăng nhập thì trả về rỗng
 
@@ -28,7 +28,7 @@ class SupabaseTaskRepository implements TaskRepository {
       'title': task.title,
       'room': task.room,
       'description': task.description,
-      'deadline': task.deadline?.toIso8601String(),
+       'deadline': task.deadline?.toUtc().toIso8601String(),
       'is_done': task.isDone,
     });
   }
@@ -41,7 +41,7 @@ class SupabaseTaskRepository implements TaskRepository {
       'title': task.title,
       'room': task.room,
       'description': task.description,
-      'deadline': task.deadline?.toIso8601String(),
+      'deadline': task.deadline?.toUtc().toIso8601String(),
       'is_done': task.isDone,
     })
         .eq('id', task.id!);
