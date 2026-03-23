@@ -127,7 +127,7 @@ class Header extends StatelessWidget {
               alignment: Alignment.topCenter,
               child: Padding(
                 padding: const EdgeInsets.only(top: 20),
-                
+
               ),
             ),
           ),

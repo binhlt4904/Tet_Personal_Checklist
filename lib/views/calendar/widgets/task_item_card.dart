@@ -80,9 +80,7 @@ class TaskItemCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      decoration: task.isDone
-                          ? TextDecoration.lineThrough
-                          : null,
+                      decoration: null,
                     ),
                   ),
                 ),
