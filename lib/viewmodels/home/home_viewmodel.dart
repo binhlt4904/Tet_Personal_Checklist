@@ -58,7 +58,7 @@ class HomeViewModel extends ChangeNotifier {
       await repository.insert(task);
       await loadTasks();
 
-      addSuccess = true; // 👈 báo thành công
+      addSuccess = true;
     } catch (e) {
       addSuccess = false;
     }
@@ -80,7 +80,6 @@ class HomeViewModel extends ChangeNotifier {
 
     await repository.update(updated);
 
-    // update local luôn cho mượt UI
     final index = _tasks.indexWhere((t) => t.id == task.id);
     if (index != -1) {
       _tasks[index] = updated;
@@ -136,10 +135,9 @@ class HomeViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-// Xóa cache và load lại từ Supabase (khi login user mới)
   Future<void> clearAndReload() async {
     _tasks = [];
     notifyListeners();
-    await loadTasks(); // hàm load tasks hiện tại của bạn
+    await loadTasks();
   }
 }
